@@ -1,11 +1,11 @@
 #![allow(dead_code)]
 
-use std::path::PathBuf;
 use crate::interface::main_interface;
 use crate::language_labels::{self, LangModule, LangProfile};
 use eframe;
-use egui_colors::{Colorix, utils};
+use egui_colors::{utils, Colorix};
 use rfd;
+use std::path::PathBuf;
 
 #[derive(Default, Clone)]
 pub struct App {
@@ -69,7 +69,9 @@ impl Document {
 
 impl App {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
-        let colorix = Colorix::global(&cc.egui_ctx, utils::OFFICE_GRAY).animated().set_time(1.); 
+        let colorix = Colorix::global(&cc.egui_ctx, utils::OFFICE_GRAY)
+            .animated()
+            .set_time(1.);
         let mut language = LangModule::default();
         language.labels = language_labels::LABELS_EN;
         language.lang_profile = LangProfile::English;

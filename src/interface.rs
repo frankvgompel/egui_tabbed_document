@@ -1,4 +1,7 @@
-use crate::{app::{App, Document, DocumentKind, TabKey}, language_labels::{LangModule, LangProfile}};
+use crate::{
+    app::{App, Document, DocumentKind, TabKey},
+    language_labels::{LangModule, LangProfile},
+};
 use eframe::egui::{self, Ui};
 
 pub(crate) fn main_interface(app: &mut App, ctx: &egui::Context) {
@@ -17,13 +20,21 @@ pub(crate) fn main_interface(app: &mut App, ctx: &egui::Context) {
                 .selected_text(format!("{:?}", app.language.lang_profile))
                 .show_ui(ui, |ui| {
                     if ui
-                        .selectable_value(&mut app.language.lang_profile, LangProfile::English, "English")
+                        .selectable_value(
+                            &mut app.language.lang_profile,
+                            LangProfile::English,
+                            "English",
+                        )
                         .clicked()
                     {
                         app.language.set_lang()
                     };
                     if ui
-                        .selectable_value(&mut app.language.lang_profile, LangProfile::Español, "Español")
+                        .selectable_value(
+                            &mut app.language.lang_profile,
+                            LangProfile::Español,
+                            "Español",
+                        )
                         .clicked()
                     {
                         app.language.set_lang()
@@ -66,7 +77,7 @@ pub(crate) fn main_interface(app: &mut App, ctx: &egui::Context) {
                             // "New.."
                             app.selected_tab = i
                         }
-                    } 
+                    }
                 };
                 if ui.selectable_label(true, "ｘ").clicked() {
                     app.remove_tab(i);
