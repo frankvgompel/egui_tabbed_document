@@ -11,6 +11,6 @@ pub fn main() -> Result<(), eframe::Error> {
     eframe::run_native(
         "Egui Tabbed Documents",
         options,
-        Box::new(|_cc| Ok(Box::new(App::new()))),
+        Box::new(|cc| Ok(Box::new(App::new(cc)))),
     )
 }

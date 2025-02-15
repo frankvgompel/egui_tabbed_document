@@ -5,4 +5,5 @@ edition = "2021"
 
 [dependencies]
 eframe = { version ="0.31.0", features = ["persistence"]}
+egui_colors = "0.7.0"
 rfd = "0.15.2"

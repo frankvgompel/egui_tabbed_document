@@ -11,7 +11,7 @@ pub(crate) fn main_interface(app: &mut App, ctx: &egui::Context) {
                 }
             });
             ui.add_space(16.0);
-            egui::widgets::global_theme_preference_buttons(ui);
+            app.colorix.light_dark_toggle_button(ui, 12.);
             ui.add_space(30.);
             egui::ComboBox::from_label("")
                 .selected_text(format!("{:?}", app.language.lang_profile))
@@ -61,21 +61,12 @@ pub(crate) fn main_interface(app: &mut App, ctx: &egui::Context) {
                             app.selected_tab = i
                         }
                     }
-                    TabKey::DocumentTab(_) => {
-                        if ui.label(labels[1]).clicked() {
-                            // "New"
+                    TabKey::DocumentTab(doc) => {
+                        if ui.label(doc.name.clone()).clicked() {
+                            // "New.."
                             app.selected_tab = i
                         }
-                    } // TabKey::DocumentTab(document) => {
-                      //     match document.kind {
-                      //         crate::app::DocumentKind::Text => if ui.label(app.labels[1]).clicked() { // "new"
-                      //             app.selected_tab = i
-                      //         },
-                      //         crate::app::DocumentKind::Image => if ui.label(app.labels[1]).clicked() { // "new"
-                      //             app.selected_tab = i
-                      //         },
-                      //     }
-                      // },
+                    } 
                 };
                 if ui.selectable_label(true, "ｘ").clicked() {
                     app.remove_tab(i);

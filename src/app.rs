@@ -4,23 +4,18 @@ use std::path::PathBuf;
 use crate::interface::main_interface;
 use crate::language_labels::{self, LangModule, LangProfile};
 use eframe;
+use egui_colors::{Colorix, utils};
 use rfd;
 
 #[derive(Default, Clone)]
 pub struct App {
+    pub colorix: Colorix,
     pub language: LangModule,
     pub tabs: Vec<TabKey>,
     pub show_home_tab_on_startup: bool,
     pub selected_tab: usize,
     pub previous_selected_tab: usize,
 }
-
-// #[derive(Debug, Default, Clone, PartialEq)]
-// pub enum LangProfile {
-//     #[default]
-//     English,
-//     Español,
-// }
 
 #[derive(Debug, Default, Clone, PartialEq)]
 pub enum TabKey {
@@ -73,11 +68,13 @@ impl Document {
 }
 
 impl App {
-    pub fn new() -> Self {
+    pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
+        let colorix = Colorix::global(&cc.egui_ctx, utils::OFFICE_GRAY).animated().set_time(1.); 
         let mut language = LangModule::default();
         language.labels = language_labels::LABELS_EN;
         language.lang_profile = LangProfile::English;
         Self {
+            colorix,
             language,
             ..Default::default()
         }
@@ -96,7 +93,8 @@ impl App {
         }
     }
     pub fn add_new_tab(&mut self) {
-        let doc = Document::default();
+        let mut doc = Document::default();
+        doc.name = format!("New {}", self.tabs.len());
         self.tabs.push(TabKey::DocumentTab(doc));
         self.previous_selected_tab = self.selected_tab;
         self.selected_tab = self.tabs.len() - 1;
@@ -129,6 +127,7 @@ impl eframe::App for App {
     //     eframe::set_value(storage, eframe::APP_KEY, self);
     // }
     fn update(&mut self, ctx: &eframe::egui::Context, _frame: &mut eframe::Frame) {
+        self.colorix.set_animator(ctx);
         main_interface(self, ctx)
     }
 }

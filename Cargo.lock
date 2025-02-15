@@ -930,6 +930,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "egui_colors"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ce68ecf07f6bdc5c0d7642367973b1f26dd9049f32c17613e0164c62355cde2a"
+dependencies = [
+ "egui",
+]
+
+[[package]]
 name = "egui_glow"
 version = "0.31.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -952,6 +961,7 @@ name = "egui_tabbed_document"
 version = "0.1.0"
 dependencies = [
  "eframe",
+ "egui_colors",
  "rfd",
 ]
 
