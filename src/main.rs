@@ -2,8 +2,8 @@ mod app;
 mod interface;
 mod language_labels;
 use app::App;
-use std::sync::Arc;
 use eframe::egui;
+use std::sync::Arc;
 
 use eframe;
 pub fn main() -> Result<(), eframe::Error> {
@@ -29,6 +29,7 @@ pub fn main() -> Result<(), eframe::Error> {
         Box::new(|cc| {
             cc.egui_ctx.set_fonts(fonts);
             egui_extras::install_image_loaders(&cc.egui_ctx);
-            Ok(Box::new(App::new(cc)))}),
+            Ok(Box::new(App::new(cc)))
+        }),
     )
 }

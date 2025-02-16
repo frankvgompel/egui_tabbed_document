@@ -12,6 +12,8 @@ pub struct App {
     pub colorix: Colorix,
     pub language: LangModule,
     pub tabs: Vec<TabKey>,
+    pub tab_names: Vec<String>,
+    pub documents: Vec<Document>,
     pub show_home_tab_on_startup: bool,
     pub selected_tab: usize,
     pub previous_selected_tab: usize,
@@ -21,16 +23,7 @@ pub struct App {
 pub enum TabKey {
     #[default]
     Home,
-    DocumentTab(Document),
-}
-
-impl TabKey {
-    fn init_doc(&mut self) {
-        match self {
-            TabKey::Home => {}
-            TabKey::DocumentTab(document) => document.init = true,
-        };
-    }
+    DocumentTab,
 }
 
 #[derive(Debug, Default, Clone, PartialEq)]
@@ -60,8 +53,17 @@ impl Document {
     pub fn init_doc(&mut self) {
         self.init = true
     }
-    pub fn pick_file(&mut self) {
-        if let Some(path) = rfd::FileDialog::new().pick_file() {
+    // pub fn pick_file(&mut self) {
+    //     if let Some(path) = rfd::FileDialog::new().pick_file() {
+    //         self.path = path
+    //     };
+    // }
+    pub fn set_dir(&mut self) {
+        self.set_directory();
+        // TODO save file
+    }
+    fn set_directory(&mut self) {
+        if let Some(path) = rfd::FileDialog::new().pick_folder() {
             self.path = path
         };
     }
@@ -81,9 +83,27 @@ impl App {
             ..Default::default()
         }
     }
+    pub fn save_dir(&mut self) {
+        self.documents[self.selected_tab].set_dir();
+    }
+    pub fn init_doc(&mut self) {
+        self.documents[self.selected_tab].init_doc();
+        match self.documents[self.selected_tab].kind {
+            DocumentKind::Text => {
+                self.tab_names[self.selected_tab] =
+                    format!("{}.txt", self.documents[self.selected_tab].name.clone())
+            }
+            DocumentKind::Image => {
+                self.tab_names[self.selected_tab] =
+                    format!("{}.bmp", self.documents[self.selected_tab].name.clone())
+            }
+        }
+    }
     pub fn show_home_tab(&mut self) {
         if !self.tabs.contains(&TabKey::Home) {
             self.tabs.push(TabKey::Home);
+            self.documents.push(Document::default());
+            self.tab_names.push("Home".to_string());
             self.previous_selected_tab = self.selected_tab;
             self.selected_tab = self.tabs.len() - 1;
         } else {
@@ -97,15 +117,37 @@ impl App {
     pub fn add_new_tab(&mut self) {
         let mut doc = Document::default();
         doc.name = format!("New {}", self.tabs.len());
-        self.tabs.push(TabKey::DocumentTab(doc));
+        // self.tabs.push(TabKey::DocumentTab(doc));
+        self.tabs.push(TabKey::DocumentTab);
+
+        self.documents.push(Document::default());
+        self.tab_names.push(self.language.labels[1].to_string());
         self.previous_selected_tab = self.selected_tab;
         self.selected_tab = self.tabs.len() - 1;
     }
     pub fn pick_file(&mut self) {
-        if let Some(_path) = rfd::FileDialog::new()
-            .pick_file()
-            .map(std::path::PathBuf::from)
-        {};
+        if let Some(file) = rfd::FileDialog::new().pick_file() {
+            let mut doc = Document::default();
+            doc.path = file.parent().unwrap().to_path_buf();
+            let path = file.as_path();
+            if let Some(extension) = path.extension() {
+                if extension == "txt" {
+                    doc.kind = DocumentKind::Text
+                } else if extension == "bmp" {
+                    doc.kind = DocumentKind::Image
+                }
+            }
+            if let Some(file_stem) = path.file_stem() {
+                let name = file_stem.to_os_string().into_string().unwrap();
+                self.tab_names.push(name.clone());
+                doc.name = name;
+            };
+            self.tabs.push(TabKey::DocumentTab);
+            doc.init = true;
+            self.documents.push(doc);
+            self.previous_selected_tab = self.selected_tab;
+            self.selected_tab = self.tabs.len() - 1;
+        };
     }
     pub fn close_all(&mut self) {
         self.tabs.clear();
@@ -118,9 +160,6 @@ impl App {
         }
         self.previous_selected_tab = self.selected_tab;
         self.tabs.remove(i);
-    }
-    pub fn init_doc(&mut self) {
-        self.tabs[self.selected_tab].init_doc();
     }
 }
 
