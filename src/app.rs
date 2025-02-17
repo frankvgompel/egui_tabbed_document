@@ -153,6 +153,8 @@ impl App {
         }
         self.previous_selected_tab = self.selected_tab;
         self.tabs.remove(i);
+        self.tab_names.remove(i);
+        self.documents.remove(i);
     }
 }
 
