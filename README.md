@@ -1,5 +1,12 @@
 # Tabbed document UI example
 
+Example from [Hydra](https://github.com/hydra/egui-tabbed-document-ui-example/tree/main)
+
+He was interested to see how someone with some egui experience would tackle this. Work in progress.
+
+Mine is a simple approach: no `traits`, `lifetimes`, `senders`, `messages` or `mutex` required so far.
+Has a custom `tabs` and `language` system which definitely presents challenges and limitations.
+
 ## Requirements
 
 - Main window
