@@ -64,30 +64,32 @@ pub fn main_interface(app: &mut App, ctx: &egui::Context) {
     egui::TopBottomPanel::top("tab bar").show(ctx, |ui| {
         ui.horizontal(|ui| {
             for (i, tab) in app.tabs.clone().iter().enumerate() {
-                let color = if i == app.selected_tab  {
-                    app.colorix.animator.animated_tokens.active_ui_element_background()
-                }
-                else {
-                    app.colorix.animator.animated_tokens.app_background()
-                };
-                match tab {
-                    TabKey::Home => {
-                        if ui.label(egui::RichText::new(labels[0]).background_color(color)).clicked() {
-                            // "Home"
-                            app.selected_tab = i
-                        }
+                if app.tabs.get(i).is_some() {
+                    let color = if i == app.selected_tab  {
+                        app.colorix.animator.animated_tokens.active_ui_element_background()
                     }
-                    TabKey::DocumentTab => {
-                        if ui.label(egui::RichText::new(&app.tab_names[i]).background_color(color)).clicked() {
-                            // "New.."
-                            app.selected_tab = i
+                    else {
+                        app.colorix.animator.animated_tokens.app_background()
+                    };
+                    match tab {
+                        TabKey::Home => {
+                            if ui.label(egui::RichText::new(labels[0]).background_color(color)).clicked() {
+                                // "Home"
+                                app.selected_tab = i
+                            }
                         }
+                        TabKey::DocumentTab => {
+                            if ui.label(egui::RichText::new(&app.tab_names[i]).background_color(color)).clicked() {
+                                // "New.."
+                                app.selected_tab = i
+                            }
+                        }
+                    };
+                    if ui.selectable_label(true, "ｘ").clicked() {
+                        app.remove_tab(i);
                     }
-                };
-                if ui.selectable_label(true, "ｘ").clicked() {
-                    app.remove_tab(i);
+                    ui.add_space(10.);
                 }
-                ui.add_space(10.);
             }
         });
     });
@@ -174,7 +176,13 @@ fn show_document(ctx: &egui::Context, doc: &mut Document) {
 
                 let path = format!("{}/{}.bmp", path_str, doc.name);
                // ui.image(egui::include_image!("../assets/image_file_1.bmp"));
-                ui.image(path);
+               //ui.image(egui::include_image!("/Users/frankvangompel/Projects/Rust/egui_tabbed_document/assets/image_file_1.bmp"));
+                //ui.add(egui::Image::new(&path));
+                // this works
+                //ui.image("https://people.math.sc.edu/Burkardt/data/bmp/snail.bmp");
+                ui.add(egui::Image::from_uri(&path));
+                //ui.image(&path);
+                //dbg!(&path);
 
             }
         };

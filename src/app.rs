@@ -16,7 +16,7 @@ pub struct App {
     pub documents: Vec<Document>,
     pub show_home_tab_on_startup: bool,
     pub selected_tab: usize,
-    pub previous_selected_tab: usize,
+    pub previous_tab: usize,
 }
 
 #[derive(Debug, Default, Clone, PartialEq)]
@@ -99,7 +99,7 @@ impl App {
             self.tabs.push(TabKey::Home);
             self.documents.push(Document::default());
             self.tab_names.push("Home".to_string());
-            self.previous_selected_tab = self.selected_tab;
+            self.previous_tab = self.selected_tab;
             self.selected_tab = self.tabs.len() - 1;
         } else {
             for (i, v) in self.tabs.iter().enumerate() {
@@ -115,7 +115,7 @@ impl App {
         self.tabs.push(TabKey::DocumentTab);
         self.documents.push(Document::default());
         self.tab_names.push(self.language.labels[1].to_string());
-        self.previous_selected_tab = self.selected_tab;
+        self.previous_tab = self.selected_tab;
         self.selected_tab = self.tabs.len() - 1;
     }
     pub fn pick_file(&mut self) {
@@ -138,20 +138,36 @@ impl App {
             self.tabs.push(TabKey::DocumentTab);
             doc.init = true;
             self.documents.push(doc);
-            self.previous_selected_tab = self.selected_tab;
+            self.previous_tab = self.selected_tab;
             self.selected_tab = self.tabs.len() - 1;
         };
     }
     pub fn close_all(&mut self) {
         self.tabs.clear();
     }
-    pub fn remove_tab(&mut self, i: usize) {
-        if self.previous_selected_tab != 0 {
-            self.selected_tab = self.previous_selected_tab - 1;
+    pub fn _remove_tab(&mut self, i: usize) {
+        if self.previous_tab != 0 {
+            self.selected_tab = self.previous_tab - 1;
         } else {
             self.selected_tab = 0;
         }
-        self.previous_selected_tab = self.selected_tab;
+        self.previous_tab = self.selected_tab;
+        self.tabs.remove(i);
+        self.tab_names.remove(i);
+        self.documents.remove(i);
+    }
+
+    pub fn remove_tab(&mut self, i: usize) {
+        if self.selected_tab == i {
+            if i < self.previous_tab {
+                self.previous_tab = (self.previous_tab - 1).clamp(0, self.previous_tab)
+            }
+            self.selected_tab = self.previous_tab
+        }
+        else if self.previous_tab == i || self.selected_tab > i {
+            self.selected_tab = (self.selected_tab - 1).clamp(0, self.selected_tab);
+            self.previous_tab = (self.previous_tab - 1).clamp(0, self.previous_tab)
+        }
         self.tabs.remove(i);
         self.tab_names.remove(i);
         self.documents.remove(i);
