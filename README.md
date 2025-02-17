@@ -5,7 +5,9 @@ Example from [Hydra](https://github.com/hydra/egui-tabbed-document-ui-example/tr
 He was interested to see how someone with some egui experience would tackle this. Work in progress.
 
 Mine is a simple approach: no `traits`, `lifetimes`, `senders`, `messages` or `mutex` required so far.
+I deliberately skipped the requirements for `validation`, `state persistence` and `layout`.
 Has a custom `tabs` and `language` system which definitely presents challenges and limitations.
+The focus of the tab bar is on function but could also be made to look like a proper tab bar.
 
 ## Requirements
 
