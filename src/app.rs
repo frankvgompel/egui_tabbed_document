@@ -145,28 +145,39 @@ impl App {
     pub fn close_all(&mut self) {
         self.tabs.clear();
     }
-    pub fn _remove_tab(&mut self, i: usize) {
-        if self.previous_tab != 0 {
-            self.selected_tab = self.previous_tab - 1;
-        } else {
-            self.selected_tab = 0;
+
+    pub fn decrease_selected(&mut self) {
+        if self.selected_tab != 0 {
+            self.selected_tab = self.selected_tab - 1;
         }
-        self.previous_tab = self.selected_tab;
-        self.tabs.remove(i);
-        self.tab_names.remove(i);
-        self.documents.remove(i);
     }
+    pub fn decrease_previous(&mut self) {
+        if self.previous_tab != 0 {
+            self.previous_tab = self.previous_tab - 1;
+        }
+    }
+    // pub fn _remove_tab(&mut self, i: usize) {
+    //     if self.previous_tab != 0 {
+    //         self.selected_tab = self.previous_tab - 1;
+    //     } else {
+    //         self.selected_tab = 0;
+    //     }
+    //     self.previous_tab = self.selected_tab;
+    //     self.tabs.remove(i);
+    //     self.tab_names.remove(i);
+    //     self.documents.remove(i);
+    // }
 
     pub fn remove_tab(&mut self, i: usize) {
         if self.selected_tab == i {
             if i < self.previous_tab {
-                self.previous_tab = (self.previous_tab - 1).clamp(0, self.previous_tab)
+                self.decrease_previous();
             }
             self.selected_tab = self.previous_tab
         }
         else if self.previous_tab == i || self.selected_tab > i {
-            self.selected_tab = (self.selected_tab - 1).clamp(0, self.selected_tab);
-            self.previous_tab = (self.previous_tab - 1).clamp(0, self.previous_tab)
+            self.decrease_previous();
+            self.decrease_selected();
         }
         self.tabs.remove(i);
         self.tab_names.remove(i);
