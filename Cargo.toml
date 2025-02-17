@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 eframe = { version ="0.31.0", features = ["persistence"]}
-egui_extras = { version = "0.31.0" , features = ["all_loaders"] }
+egui_extras = { version = "0.31.0" , features = ["all_loaders", "image", "file"] }
 egui_colors = "0.7.0"
 rfd = "0.15.2"
+image =  { version = "0.25.5", features = ["bmp"] }
