@@ -53,11 +53,6 @@ impl Document {
     pub fn init_doc(&mut self) {
         self.init = true
     }
-    // pub fn pick_file(&mut self) {
-    //     if let Some(path) = rfd::FileDialog::new().pick_file() {
-    //         self.path = path
-    //     };
-    // }
     pub fn set_dir(&mut self) {
         self.set_directory();
         // TODO save file
@@ -91,11 +86,11 @@ impl App {
         match self.documents[self.selected_tab].kind {
             DocumentKind::Text => {
                 self.tab_names[self.selected_tab] =
-                    format!("{}.txt", self.documents[self.selected_tab].name.clone())
+                    format!("{}.txt", self.documents[self.selected_tab].name)
             }
             DocumentKind::Image => {
                 self.tab_names[self.selected_tab] =
-                    format!("{}.bmp", self.documents[self.selected_tab].name.clone())
+                    format!("{}.bmp", self.documents[self.selected_tab].name)
             }
         }
     }
@@ -117,9 +112,7 @@ impl App {
     pub fn add_new_tab(&mut self) {
         let mut doc = Document::default();
         doc.name = format!("New {}", self.tabs.len());
-        // self.tabs.push(TabKey::DocumentTab(doc));
         self.tabs.push(TabKey::DocumentTab);
-
         self.documents.push(Document::default());
         self.tab_names.push(self.language.labels[1].to_string());
         self.previous_selected_tab = self.selected_tab;

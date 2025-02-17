@@ -1,5 +1,4 @@
 use std::fs;
-
 use crate::{
     app::{App, Document, DocumentKind, TabKey},
     language_labels::LangProfile,
@@ -48,20 +47,16 @@ pub fn main_interface(app: &mut App, ctx: &egui::Context) {
     });
     egui::TopBottomPanel::top("utility buttons").show(ctx, |ui| {
         ui.horizontal(|ui| {
-            if ui.button(labels[0]).clicked() {
-                // "Home"
+            if ui.button(labels[0]).clicked() { // "Home"
                 app.show_home_tab();
             }
-            if ui.button(labels[1]).clicked() {
-                // "New"
+            if ui.button(labels[1]).clicked() { // "New"
                 app.add_new_tab();
             }
-            if ui.button(labels[2]).clicked() {
-                // "Open"
+            if ui.button(labels[2]).clicked() { // "Open"
                 app.pick_file()
             }
-            if ui.button(labels[3]).clicked() {
-                // "Close All"
+            if ui.button(labels[3]).clicked() { // "Close All"
                 app.close_all()
             }
         });
@@ -69,15 +64,21 @@ pub fn main_interface(app: &mut App, ctx: &egui::Context) {
     egui::TopBottomPanel::top("tab bar").show(ctx, |ui| {
         ui.horizontal(|ui| {
             for (i, tab) in app.tabs.clone().iter().enumerate() {
+                let color = if i == app.selected_tab  {
+                    app.colorix.animator.animated_tokens.active_ui_element_background()
+                }
+                else {
+                    app.colorix.animator.animated_tokens.app_background()
+                };
                 match tab {
                     TabKey::Home => {
-                        if ui.label(labels[0]).clicked() {
+                        if ui.label(egui::RichText::new(labels[0]).background_color(color)).clicked() {
                             // "Home"
                             app.selected_tab = i
                         }
                     }
                     TabKey::DocumentTab => {
-                        if ui.label(app.tab_names[i].clone()).clicked() {
+                        if ui.label(egui::RichText::new(&app.tab_names[i]).background_color(color)).clicked() {
                             // "New.."
                             app.selected_tab = i
                         }
@@ -127,7 +128,6 @@ fn show_form(app: &mut App, ui: &mut Ui) {
                     .to_string_lossy(),
             );
             if ui.button("...").clicked() {
-                //doc.save_file();
                 app.save_dir();
             };
             ui.end_row();
@@ -149,10 +149,8 @@ fn show_form(app: &mut App, ui: &mut Ui) {
             ui.end_row();
 
             ui.label("");
-            if ui.button(labels[4]).clicked() {
-                // "Submit"
-                app.init_doc();
-                // save file
+            if ui.button(labels[4]).clicked() { // "Submit"
+                app.init_doc(); // save file
             }
             ui.end_row();
         });
@@ -168,19 +166,19 @@ fn show_document(ctx: &egui::Context, doc: &mut Document) {
         match doc.kind {
             DocumentKind::Text => {
                 let path = format!("{}/{}.txt", path_str, doc.name);
-                if let Ok(mut text) = fs::read_to_string(path.clone()) {
+                if let Ok(mut text) = fs::read_to_string(&path) {
                     ui.text_edit_multiline(&mut text);
-                    dbg!(&text);
                 }
-                dbg!(&path);
-                // let mut text = fs::read_to_string(path).unwrap();
-                // ui.text_edit_multiline(&mut text)
             }
             DocumentKind::Image => {
+
                 let path = format!("{}/{}.bmp", path_str, doc.name);
+               // ui.image(egui::include_image!("../assets/image_file_1.bmp"));
                 ui.image(path);
+
             }
         };
-        dbg!(&path_str);
     });
 }
+
+
