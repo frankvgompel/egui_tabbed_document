@@ -3,7 +3,8 @@ use crate::{
     app::{App, Document, DocumentKind, TabKey},
     language_labels::LangProfile,
 };
-use eframe::egui::{self, Ui};
+use eframe::egui::{self, load::SizedTexture, Image, ImageSource, TextureOptions, Ui};
+use image::{GenericImageView, ImageReader};
 
 pub fn main_interface(app: &mut App, ctx: &egui::Context) {
     let labels = app.language.labels;
@@ -173,16 +174,16 @@ fn show_document(ctx: &egui::Context, doc: &mut Document) {
                 }
             }
             DocumentKind::Image => {
-
                 let path = format!("{}/{}.bmp", path_str, doc.name);
-               // ui.image(egui::include_image!("../assets/image_file_1.bmp"));
-               //ui.image(egui::include_image!("/Users/frankvangompel/Projects/Rust/egui_tabbed_document/assets/image_file_1.bmp"));
-                //ui.add(egui::Image::new(&path));
-                // this works
-                //ui.image("https://people.math.sc.edu/Burkardt/data/bmp/snail.bmp");
-                ui.add(egui::Image::from_uri(&path));
-                //ui.image(&path);
-                //dbg!(&path);
+                let img = ImageReader::open(path).ok().unwrap().decode().ok().unwrap();
+                let size = img.dimensions();
+                let rgba = img.to_rgba8();
+                let pixels = rgba.as_flat_samples();
+                let color_image = egui::ColorImage::from_rgba_unmultiplied([size.0 as usize, size.1 as usize], pixels.as_slice());
+                let handle = ctx.load_texture("loaded_image", color_image, TextureOptions::default());
+                let image_source = ImageSource::Texture(SizedTexture::from_handle(&handle));
+                let image = Image::new(image_source);
+                ui.add(image);
 
             }
         };

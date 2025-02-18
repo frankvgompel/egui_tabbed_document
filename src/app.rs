@@ -156,17 +156,6 @@ impl App {
             self.previous_tab = self.previous_tab - 1;
         }
     }
-    // pub fn _remove_tab(&mut self, i: usize) {
-    //     if self.previous_tab != 0 {
-    //         self.selected_tab = self.previous_tab - 1;
-    //     } else {
-    //         self.selected_tab = 0;
-    //     }
-    //     self.previous_tab = self.selected_tab;
-    //     self.tabs.remove(i);
-    //     self.tab_names.remove(i);
-    //     self.documents.remove(i);
-    // }
 
     pub fn remove_tab(&mut self, i: usize) {
         if self.selected_tab == i {
