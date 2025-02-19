@@ -81,7 +81,6 @@ pub fn main_interface(app: &mut App, ctx: &egui::Context) {
                         TabKey::DocumentTab => {
                             if ui.label(egui::RichText::new(&app.tab_names[i]).background_color(color)).clicked() { // "New"
                                 app.update_tabs(i);
-                                app.dbg_tabs();
                             }
                         }
                     };
