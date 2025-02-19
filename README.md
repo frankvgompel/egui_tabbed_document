@@ -24,18 +24,18 @@ The focus of the tab bar is on function but could also be made to look like a pr
     - [x] When a file is opened, a tab appears and depending on the file type, it shows different content in the tab. (e.g. '.txt' text shows the 'Text' tab, '.bmp' shows the 'Image' tab).
   - 'New' button
     - [x] When clicked the 'New' tab is shown, see below.
-  - [ ] Language dropdown, choose between at least 2 languages (e.g. English and Spanish).
-    - [ ] Changing the language should cause all UI text to be immediately displayed in the selected language without requiring a restart.
+    - [x] Language dropdown, choose between at least 2 languages (e.g. English and Spanish).
+    - [x] Changing the language should cause all UI text to be immediately displayed in the selected language without requiring a restart.
 - Tab bar
   - [ ] When all the tabs won't fit in the window, there must be some controls to allow them all to be selected, e.g. `<` and `>` buttons, or `V` dropdown, or scrollable.
   - [x] Selecting a tab changes the content area below the tab bar.
-  - [ ] Must be obvious which tab is selected when there are only two tabs.
+  - [x] Must be obvious which tab is selected when there are only two tabs.
   - [x] Each tab should be closable (e.g. an `X` button on the tab or right-click on tab to show a context menu with `Close`)
-  - [ ] When a tab is closed, the next most recently used tab is made active.
+  - [x] When a tab is closed, the next most recently used tab is made active.
 - Tab content
   - [x] Displays the content for the tab.
   - [x] Each tab content must maintain it's state, without expensive re-loads/refreshing of the state, no re-loading of files.
-  - [ ] Scroll bars should appear if the content does not fit the window.
+  - [x] Scroll bars should appear if the content does not fit the window.
   - Tabs
     - 'Home' tab
       - [x] Shows a welcome message.

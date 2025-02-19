@@ -101,12 +101,14 @@ impl App {
             self.tab_names.push("Home".to_string());
             self.previous_tab = self.selected_tab;
             self.selected_tab = self.tabs.len() - 1;
+            //self.dbg_tabs();
         } else {
             for (i, v) in self.tabs.iter().enumerate() {
                 if *v == TabKey::Home {
                     self.selected_tab = i
                 }
             }
+           // self.dbg_tabs();
         }
     }
     pub fn add_new_tab(&mut self) {
@@ -140,26 +142,33 @@ impl App {
             self.documents.push(doc);
             self.previous_tab = self.selected_tab;
             self.selected_tab = self.tabs.len() - 1;
+            //self.dbg_tabs();
         };
     }
     pub fn close_all(&mut self) {
         self.tabs.clear();
     }
-
-    pub fn decrease_selected(&mut self) {
-        if self.selected_tab != 0 {
-            self.selected_tab = self.selected_tab - 1;
+    pub fn update_tabs(&mut self, i: usize) {
+        if self.selected_tab != i {
+            self.previous_tab = self.selected_tab;
+            self.selected_tab = i;
         }
     }
-    pub fn decrease_previous(&mut self) {
+
+    fn decrease_selected(&mut self) {
+        if self.selected_tab != 0 {
+            self.selected_tab -= 1;
+        }
+    }
+    fn decrease_previous(&mut self) {
         if self.previous_tab != 0 {
-            self.previous_tab = self.previous_tab - 1;
+            self.previous_tab -= 1;
         }
     }
 
     pub fn remove_tab(&mut self, i: usize) {
         if self.selected_tab == i {
-            if i < self.previous_tab {
+            if i <= self.previous_tab {
                 self.decrease_previous();
             }
             self.selected_tab = self.previous_tab
@@ -168,9 +177,17 @@ impl App {
             self.decrease_previous();
             self.decrease_selected();
         }
+        else if self.previous_tab > i && self.selected_tab < i {
+            self.decrease_previous();
+        }
         self.tabs.remove(i);
         self.tab_names.remove(i);
         self.documents.remove(i);
+    }
+    pub fn dbg_tabs(&self) {
+        dbg!(&self.selected_tab);
+        dbg!(&self.previous_tab);
+        dbg!(&self.tabs.len());
     }
 }
 

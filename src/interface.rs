@@ -74,15 +74,14 @@ pub fn main_interface(app: &mut App, ctx: &egui::Context) {
                     };
                     match tab {
                         TabKey::Home => {
-                            if ui.label(egui::RichText::new(labels[0]).background_color(color)).clicked() {
-                                // "Home"
-                                app.selected_tab = i
+                            if ui.label(egui::RichText::new(labels[0]).background_color(color)).clicked() { // "Home"
+                                app.update_tabs(i);
                             }
                         }
                         TabKey::DocumentTab => {
-                            if ui.label(egui::RichText::new(&app.tab_names[i]).background_color(color)).clicked() {
-                                // "New.."
-                                app.selected_tab = i
+                            if ui.label(egui::RichText::new(&app.tab_names[i]).background_color(color)).clicked() { // "New"
+                                app.update_tabs(i);
+                                app.dbg_tabs();
                             }
                         }
                     };
@@ -95,16 +94,28 @@ pub fn main_interface(app: &mut App, ctx: &egui::Context) {
         });
     });
     egui::CentralPanel::default().show(ctx, |ui| {
-        if !app.tabs.is_empty() {
-            match app.tabs[app.selected_tab] {
-                TabKey::Home => show_home_ui(ui, &mut app.show_home_tab_on_startup),
-                // TabKey::DocumentTab(ref mut doc) => match doc.init {
-                TabKey::DocumentTab => match app.documents[app.selected_tab].init {
-                    true => show_document(ctx, &mut app.documents[app.selected_tab]),
-                    false => show_form(app, ui),
-                },
+        egui::ScrollArea::vertical().show(ui, |ui| {
+            if !app.tabs.is_empty() {
+                match app.tabs[app.selected_tab] {
+                    TabKey::Home => show_home_ui(ui, &mut app.show_home_tab_on_startup),
+                    // TabKey::DocumentTab(ref mut doc) => match doc.init {
+                    TabKey::DocumentTab => match app.documents[app.selected_tab].init {
+                        true => show_document(ctx, &mut app.documents[app.selected_tab]),
+                        false => show_form(app, ui),
+                    },
+                }
             }
-        }
+        });
+        // if !app.tabs.is_empty() {
+        //     match app.tabs[app.selected_tab] {
+        //         TabKey::Home => show_home_ui(ui, &mut app.show_home_tab_on_startup),
+        //         // TabKey::DocumentTab(ref mut doc) => match doc.init {
+        //         TabKey::DocumentTab => match app.documents[app.selected_tab].init {
+        //             true => show_document(ctx, &mut app.documents[app.selected_tab]),
+        //             false => show_form(app, ui),
+        //         },
+        //     }
+        // }
     });
 }
 
@@ -134,6 +145,7 @@ fn show_form(app: &mut App, ui: &mut Ui) {
                 app.save_dir();
             };
             ui.end_row();
+
             ui.label(labels[9]); // "Kind"
             egui::ComboBox::from_id_salt(format!("{}", app.documents[app.selected_tab].name))
                 .selected_text(app.documents[app.selected_tab].kind.fmt(&app.language))
@@ -184,7 +196,6 @@ fn show_document(ctx: &egui::Context, doc: &mut Document) {
                 let image_source = ImageSource::Texture(SizedTexture::from_handle(&handle));
                 let image = Image::new(image_source);
                 ui.add(image);
-
             }
         };
     });
