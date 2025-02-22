@@ -146,7 +146,7 @@ fn show_form(app: &mut App, ui: &mut Ui) {
             ui.end_row();
 
             ui.label(labels[9]); // "Kind"
-            egui::ComboBox::from_id_salt(format!("{}", app.documents[app.selected_tab].name))
+            egui::ComboBox::from_id_salt(app.documents[app.selected_tab].name.to_string())
                 .selected_text(app.documents[app.selected_tab].kind.fmt(&app.language))
                 .show_ui(ui, |ui| {
                     ui.selectable_value(

@@ -5,7 +5,6 @@ use app::App;
 use eframe::egui;
 use std::sync::Arc;
 
-use eframe;
 pub fn main() -> Result<(), eframe::Error> {
     let options = eframe::NativeOptions {
         ..Default::default()

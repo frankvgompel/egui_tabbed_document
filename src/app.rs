@@ -2,9 +2,7 @@
 
 use crate::interface::main_interface;
 use crate::language_labels::{self, LangModule, LangProfile};
-use eframe;
 use egui_colors::{utils, Colorix};
-use rfd;
 use std::path::PathBuf;
 
 #[derive(Default, Clone)]
@@ -69,9 +67,7 @@ impl App {
         let colorix = Colorix::global(&cc.egui_ctx, utils::OFFICE_GRAY)
             .animated()
             .set_time(1.);
-        let mut language = LangModule::default();
-        language.labels = language_labels::LABELS_EN;
-        language.lang_profile = LangProfile::English;
+        let language = LangModule { labels: language_labels::LABELS_EN, lang_profile: LangProfile::English };
         Self {
             colorix,
             language,
@@ -112,8 +108,6 @@ impl App {
         }
     }
     pub fn add_new_tab(&mut self) {
-        let mut doc = Document::default();
-        doc.name = format!("New {}", self.tabs.len());
         self.tabs.push(TabKey::DocumentTab);
         self.documents.push(Document::default());
         self.tab_names.push(self.language.labels[1].to_string());
